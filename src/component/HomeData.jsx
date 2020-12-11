@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { DataTable, Paginator, LoadingIndicator } from 'lucid-ui';
+import { DataTable, LoadingIndicator } from 'lucid-ui';
+import Pagination from './Pagination';
 
 const HomeData = (props) => {
 	const [gridData, setGridData] = useState([]);
@@ -14,6 +15,9 @@ const HomeData = (props) => {
 		setCurrentlySortedFieldDirection,
 	] = useState('down');
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [usersPerPage, setUsersPerPage] = useState(5);
+
 	useEffect(async () => {
 		const fetchData = await fetchHomeData();
 		setGridData(fetchData);
@@ -26,7 +30,6 @@ const HomeData = (props) => {
 				'https://jsonplaceholder.typicode.com/users'
 			);
 			const data = await response.json();
-			console.log('data---', data);
 			setLoading(false);
 			return data;
 		} catch (err) {
@@ -55,106 +58,115 @@ const HomeData = (props) => {
 		setActiveIndex(null);
 	};
 
+	const indexOfLastUser = currentPage * usersPerPage; //5
+	const indexOfFirstUser = indexOfLastUser - usersPerPage; //0
+	const currentGridData = gridData.slice(indexOfFirstUser, indexOfLastUser);
+
+	const paginate = (pageNumber) => {
+		setCurrentPage(pageNumber + 1);
+	};
+
 	return (
 		<>
 			{hasError ? (
 				<div>Error occured.</div>
 			) : (
-				<div className='mainDiv'>
-					<style>
-						{
-							'.child { display: none; } .lucid-Table-Tr:hover .child { display: block; }'
-						}
-					</style>
+				<>
 					<div>
 						<h2>Sample Data Grid</h2>
 					</div>
-					<LoadingIndicator
-						isLoading={isLoading}
-						overlayKind={overlayKind}
-					></LoadingIndicator>
-					<DataTable
-						data={_.map(gridData, (row, index) =>
-							index === activeIndex ? { ...row, isActive: true } : row
-						)}
-						isActionable
-						density='extended'
-						onRowClick={handleRowClick}
-						onSort={handleSort}
-					>
-						<DataTable.Column
-							field='id'
-							align='left'
-							width={41}
-							align='left'
-							hasBorderLeft
-							isSortable
+					<div className='mainDiv'>
+						<LoadingIndicator
+							isLoading={isLoading}
+							overlayKind={overlayKind}
+						></LoadingIndicator>
+						<DataTable
+							data={_.map(currentGridData, (row, index) =>
+								index === activeIndex ? { ...row, isActive: true } : row
+							)}
+							isActionable
+							density='extended'
+							onRowClick={handleRowClick}
+							onSort={handleSort}
 						>
-							ID
-						</DataTable.Column>
+							<DataTable.Column
+								field='id'
+								align='left'
+								width={41}
+								align='left'
+								hasBorderLeft
+								isSortable
+							>
+								ID
+							</DataTable.Column>
 
-						<DataTable.Column
-							field='name'
-							align='left'
-							width={150}
-							hasBorderLeft
-							hasBorderRight
-							isResizable
-							isSortable
-						>
-							NAME
-						</DataTable.Column>
+							<DataTable.Column
+								field='name'
+								align='left'
+								width={150}
+								hasBorderLeft
+								hasBorderRight
+								isResizable
+								isSortable
+							>
+								NAME
+							</DataTable.Column>
 
-						<DataTable.Column
-							field='username'
-							align='left'
-							width={150}
-							hasBorderLeft
-							hasBorderRight
-							isResizable
-							isSortable
-						>
-							USERNAME
-						</DataTable.Column>
+							<DataTable.Column
+								field='username'
+								align='left'
+								width={150}
+								hasBorderLeft
+								hasBorderRight
+								isResizable
+								isSortable
+							>
+								USERNAME
+							</DataTable.Column>
 
-						<DataTable.Column
-							field='email'
-							align='left'
-							width={150}
-							hasBorderLeft
-							hasBorderRight
-							isResizable
-							isSortable
-						>
-							E-MAIL
-						</DataTable.Column>
+							<DataTable.Column
+								field='email'
+								align='left'
+								width={150}
+								hasBorderLeft
+								hasBorderRight
+								isResizable
+								isSortable
+							>
+								E-MAIL
+							</DataTable.Column>
 
-						<DataTable.Column
-							field='phone'
-							align='left'
-							width={250}
-							hasBorderLeft
-							hasBorderRight
-							isResizable
-							isSortable
-						>
-							PHONE
-						</DataTable.Column>
+							<DataTable.Column
+								field='phone'
+								align='left'
+								width={250}
+								hasBorderLeft
+								hasBorderRight
+								isResizable
+								isSortable
+							>
+								PHONE
+							</DataTable.Column>
 
-						<DataTable.Column
-							field='website'
-							align='right'
-							width={100}
-							hasBorderLeft
-							hasBorderRight
-							isResizable
-							isSortable
-						>
-							WEBSITE
-						</DataTable.Column>
-					</DataTable>
-					<Paginator totalCount={_.size(gridData)} />
-				</div>
+							<DataTable.Column
+								field='website'
+								align='right'
+								width={100}
+								hasBorderLeft
+								hasBorderRight
+								isResizable
+								isSortable
+							>
+								WEBSITE
+							</DataTable.Column>
+						</DataTable>
+						<Pagination
+							totalCount={gridData.length}
+							usersPerPage={usersPerPage}
+							paginate={paginate}
+						/>
+					</div>
+				</>
 			)}
 		</>
 	);

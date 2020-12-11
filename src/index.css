@@ -14,5 +14,10 @@ code {
 
 .mainDiv {
 	text-align: center;
-	padding-left: 17%;
+	padding-left: 5%;
+}
+
+.paginationMainDiv {
+	text-align: center;
+	padding-left: 43%;
 }

@@ -1,5 +1,6 @@
 import './App.css';
-import HomeData from './component/HomeData'
+import HomeData from './component/HomeData';
+
 
 function App() {
   return (
