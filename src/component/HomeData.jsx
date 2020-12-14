@@ -18,10 +18,19 @@ const HomeData = (props) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [usersPerPage, setUsersPerPage] = useState(5);
 
+	const [jsonColumn, setJsonColumn] = useState([
+		{ col: 'id', width: '70' },
+		{ col: 'name', width: '120' },
+		{ col: 'username', width: '120' },
+		{ col: 'email', width: '120' },
+		{ col: 'phone', width: '140' },
+		{ col: 'website', width: '120' },
+	]);
+
 	useEffect(async () => {
 		const fetchData = await fetchHomeData();
 		setGridData(fetchData);
-	}, []);
+	}, [setGridData]);
 
 	const fetchHomeData = async () => {
 		try {
@@ -37,7 +46,7 @@ const HomeData = (props) => {
 		}
 	};
 
-	const handleRowClick = (item, rowIndex) => {
+	const handleRowClick = (rowIndex) => {
 		setActiveIndex(rowIndex);
 	};
 
@@ -89,76 +98,20 @@ const HomeData = (props) => {
 							onRowClick={handleRowClick}
 							onSort={handleSort}
 						>
-							<DataTable.Column
-								field='id'
-								align='left'
-								width={41}
-								align='left'
-								hasBorderLeft
-								isSortable
-							>
-								ID
-							</DataTable.Column>
-
-							<DataTable.Column
-								field='name'
-								align='left'
-								width={150}
-								hasBorderLeft
-								hasBorderRight
-								isResizable
-								isSortable
-							>
-								NAME
-							</DataTable.Column>
-
-							<DataTable.Column
-								field='username'
-								align='left'
-								width={150}
-								hasBorderLeft
-								hasBorderRight
-								isResizable
-								isSortable
-							>
-								USERNAME
-							</DataTable.Column>
-
-							<DataTable.Column
-								field='email'
-								align='left'
-								width={150}
-								hasBorderLeft
-								hasBorderRight
-								isResizable
-								isSortable
-							>
-								E-MAIL
-							</DataTable.Column>
-
-							<DataTable.Column
-								field='phone'
-								align='left'
-								width={250}
-								hasBorderLeft
-								hasBorderRight
-								isResizable
-								isSortable
-							>
-								PHONE
-							</DataTable.Column>
-
-							<DataTable.Column
-								field='website'
-								align='right'
-								width={100}
-								hasBorderLeft
-								hasBorderRight
-								isResizable
-								isSortable
-							>
-								WEBSITE
-							</DataTable.Column>
+							{_.map(jsonColumn, (row, pos) => {
+								return (
+									<DataTable.Column
+										field={`${row.col}`}
+										align='left'
+										width={`${row.width}`}
+										align='left'
+										hasBorderLeft
+										isSortable
+									>
+										{_.upperCase(row.col)}
+									</DataTable.Column>
+								);
+							})}
 						</DataTable>
 						<Pagination
 							totalCount={gridData.length}
