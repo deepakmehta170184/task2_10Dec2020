@@ -3,7 +3,6 @@ import { Paginator } from 'lucid-ui';
 import _ from 'lodash';
 
 const Pagination = (props) => {
-	console.log('totalCount----', props.totalCount);
 	return (
 		<div className='paginationMainDiv'>
 			<Paginator
