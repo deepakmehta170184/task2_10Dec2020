@@ -14,20 +14,10 @@ code {
 
 .mainDiv {
 	text-align: center;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e3b9a74 (task2 lucid ui implementaion)
 	padding-left: 5%;
 }
 
 .paginationMainDiv {
 	text-align: center;
 	padding-left: 43%;
-<<<<<<< HEAD
-=======
-	padding-left: 17%;
->>>>>>> 43742f8 (task2 for data fetch from external api and rendering with sorting over the columns)
-=======
->>>>>>> e3b9a74 (task2 lucid ui implementaion)
 }
