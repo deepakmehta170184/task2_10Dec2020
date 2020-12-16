@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { DataTable, LoadingIndicator } from 'lucid-ui';
 import Pagination from './Pagination';
+import fetchHomeData from './util/FetchHomeData';
 
 const HomeData = (props) => {
 	const [gridData, setGridData] = useState([]);
 	const [hasError, setHasError] = useState(false);
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [overlayKind, setOverlayKind] = useState('dark');
 	const [activeIndex, setActiveIndex] = useState(1);
 	const [currentlySortedField, setCurrentlySortedField] = useState('id');
@@ -29,22 +30,13 @@ const HomeData = (props) => {
 
 	useEffect(async () => {
 		const fetchData = await fetchHomeData();
-		setGridData(fetchData);
-	}, [setGridData]);
-
-	const fetchHomeData = async () => {
-		try {
-			setLoading(true);
-			const response = await fetch(
-				'https://jsonplaceholder.typicode.com/users'
-			);
-			const data = await response.json();
+		if (fetchData) {
 			setLoading(false);
-			return data;
-		} catch (err) {
-			setHasError(true);
+			setGridData(fetchData);
+		} else {
+			setHasError('Error while getting response from the api');
 		}
-	};
+	}, [setGridData]);
 
 	const handleRowClick = (rowIndex) => {
 		setActiveIndex(rowIndex);
@@ -91,7 +83,9 @@ const HomeData = (props) => {
 						></LoadingIndicator>
 						<DataTable
 							data={_.map(currentGridData, (row, index) =>
-								index === activeIndex ? { ...row, isActive: true } : row
+								index === activeIndex
+									? { ...row, isActive: true, key: index }
+									: row
 							)}
 							isActionable
 							density='extended'
