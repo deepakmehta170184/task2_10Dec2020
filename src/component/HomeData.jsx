@@ -30,6 +30,7 @@ const HomeData = (props) => {
 
 	useEffect(async () => {
 		const fetchData = await fetchHomeData();
+		console.log('fetchData--', fetchData);
 		if (fetchData) {
 			setLoading(false);
 			setGridData(fetchData);

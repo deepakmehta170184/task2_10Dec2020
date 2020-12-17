@@ -6,7 +6,7 @@ const FetchHomeData = async () => {
         const data = await response.json();
         return data;
     } catch (err) {
-        return false;
+        return null;
     }
 };
 
